@@ -42,19 +42,28 @@ const CartProvider: React.FC = ({ children }) => {
         item => item.id === product.id,
       );
 
-      if (cartAlreadyHaveProduct) {
+      if (!cartAlreadyHaveProduct) {
+        const item = {
+          id: product.id,
+          title: product.title,
+          image_url: product.image_url,
+          price: product.price,
+          quantity: 1,
+        };
+
+        setProducts(state => [...state, item]);
         return;
       }
 
-      const item = {
-        id: product.id,
-        title: product.title,
-        image_url: product.image_url,
-        price: product.price,
-        quantity: 1,
-      };
+      const cartWithProductUpdated = products.map(item => {
+        if (item.id === product.id) {
+          item.quantity += 1;
+          return item;
+        }
+        return item;
+      });
 
-      setProducts(state => [...state, item]);
+      setProducts(cartWithProductUpdated);
     },
     [products],
   );
